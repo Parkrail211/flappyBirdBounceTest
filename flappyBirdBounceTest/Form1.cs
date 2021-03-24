@@ -15,12 +15,27 @@ namespace flappyBirdBounceTest
     {
         int birdX = 400;
         int birdY = 250;
-        int birdSpeed = -5;
+        int birdSpeed = -9;
+        int pipeSpeed = -9;
+
+        const int birdHeight = 25;
+        const int birdWidth = 25;
+
+        const int pipeHeight = 600;
+        const int pipeWidth = 50;
+        int tick = 0;
+
         bool jump = false;
+
 
         bool spaceDown = false;
         bool lastSpace;
-        SolidBrush birdBrush = new SolidBrush(Color.Black);
+
+        Random rand = new Random();
+        List<int> pipeX = new List<int>();
+        List<int> pipeY = new List<int>();
+
+        SolidBrush birdBrush = new SolidBrush(Color.White);
         public Form1()
         {
             InitializeComponent();
@@ -48,29 +63,46 @@ namespace flappyBirdBounceTest
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            tick++;
+
+            if (tick % 60 == 0)
+            {
+                pipeX.Add(800);
+                pipeY.Add(rand.Next(50, 451));
+            }
+
+            for (int loop = 0; loop < pipeX.Count(); loop++)
+            {
+                if (pipeX[loop] < 0 - pipeWidth)
+                {
+                    pipeX.RemoveAt(loop);
+                    pipeY.RemoveAt(loop);
+                }
+            }
+
             if (spaceDown && !lastSpace)
             {
                 jump = true;
-                birdSpeed = -5;
+                birdSpeed = -9;
             }
 
             if (jump)
             {
                 switch (birdSpeed)
                 {
-                    case -5:
+                    case -9:
+                        birdSpeed = 9;
+                        break;
+                    case 9:
+                        birdSpeed = 7;
+                        break;
+                    case 7:
                         birdSpeed = 5;
                         break;
                     case 5:
-                        birdSpeed = 4;
-                        break;
-                    case 4:
                         birdSpeed = 3;
                         break;
                     case 3:
-                        birdSpeed = 2;
-                        break;
-                    case 2:
                         birdSpeed = 1;
                         break;
                     case 1:
@@ -80,29 +112,45 @@ namespace flappyBirdBounceTest
                         birdSpeed = -1;
                         break;
                     case -1:
-                        birdSpeed = -2;
-                        break;
-                    case -2:
                         birdSpeed = -3;
                         break;
                     case -3:
-                        birdSpeed = -4;
-                        break;
-                    case -4:
                         birdSpeed = -5;
+                        break;
+                    case -5:
+                        birdSpeed = -7;
+                        break;
+                    case -7:
+                        birdSpeed = -9;
                         jump = false;
-                        break;    
+                        break;
                 }
 
             }
             birdY -= birdSpeed;
-                lastSpace = spaceDown;
+            for (int loop = 0; loop < pipeX.Count(); loop++)
+            {
+                pipeX[loop] += pipeSpeed;
+            }
+            lastSpace = spaceDown;
             Refresh();
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.FillRectangle(birdBrush, birdX, birdY, 5, 5);
+            e.Graphics.FillRectangle(birdBrush, birdX, birdY, birdWidth, birdHeight);
+
+
+
+
+            for (int loop = 0; loop < pipeX.Count(); loop++)
+            {
+                e.Graphics.FillRectangle(birdBrush, pipeX[loop], pipeY[loop], pipeWidth, pipeHeight);
+                e.Graphics.FillRectangle(birdBrush, pipeX[loop], pipeY[loop] - pipeHeight - 100, pipeWidth, pipeHeight);
+            }
+
         }
+
+
     }
 }
