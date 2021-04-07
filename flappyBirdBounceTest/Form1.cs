@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Linq;
 using System.Media;
+using System.IO;
 
 namespace flappyBirdBounceTest
 {
@@ -55,9 +55,25 @@ namespace flappyBirdBounceTest
         SolidBrush birdBrush = new SolidBrush(Color.White);
         SolidBrush rB = new SolidBrush(Color.LightCoral);
 
+        System.Windows.Media.MediaPlayer hit = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer fall = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer point = new System.Windows.Media.MediaPlayer();
+        System.Windows.Media.MediaPlayer flap = new System.Windows.Media.MediaPlayer();
+
+
+
+      
+
         public Form1()
         {
             InitializeComponent();
+
+
+
+            hit.Open(new Uri(Application.StartupPath + "/Resources/sfx_hit.wav"));
+            fall.Open(new Uri(Application.StartupPath + "/Resources/sfx_die.wav"));
+            point.Open(new Uri(Application.StartupPath + "/Resources/sfx_point.wav"));
+            flap.Open(new Uri(Application.StartupPath + "/Resources/sfx_wing.wav"));
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -109,6 +125,8 @@ namespace flappyBirdBounceTest
 
             if (spaceDown && !lastSpace)
             {
+                flap.Stop();
+                flap.Play();
                 jump = true;
                 birdSpeed = -9;
             }
@@ -184,6 +202,16 @@ namespace flappyBirdBounceTest
 
                 if (birdRec.IntersectsWith(bPipeRec) || birdRec.IntersectsWith(tPipeRec) || birdRec.IntersectsWith(bottom))
                 {
+                    if (birdRec.IntersectsWith(bottom))
+                    {
+                        fall.Stop();
+                        fall.Play();
+                    }
+                    else
+                    {
+                        hit.Stop();
+                        hit.Play();
+                    }
                     nameBox.Text = "";
                     timer1.Enabled = false;
                     nameBox.Visible = true;
@@ -197,6 +225,8 @@ namespace flappyBirdBounceTest
             {
                 if (birdX > pipeX[0] + pipeWidth && check)
                 {
+                    point.Stop();
+                    point.Play();
                     score++;
                     check = false;
                 }
