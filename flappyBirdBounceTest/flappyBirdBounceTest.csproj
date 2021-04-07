@@ -65,6 +65,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -78,6 +79,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\b2b084ad6061dfe2122302266ea8af58.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\background-scene---flappy-bird-backround.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\New Project %285%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\New Project oij.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\184-1842460_flappy-bird-bird-png-transparent-png.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\birb.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

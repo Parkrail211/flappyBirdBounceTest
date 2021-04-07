@@ -7,35 +7,54 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Drawing;
+using System.Linq;
+using System.Media;
 
 namespace flappyBirdBounceTest
 {
+
     public partial class Form1 : Form
     {
-        int birdX = 400;
+        int birdX = 100;
         int birdY = 250;
         int birdSpeed = -9;
         int pipeSpeed = -9;
+        int score = 0;
 
         const int birdHeight = 25;
-        const int birdWidth = 25;
+        const int birdWidth = 35;
 
         const int pipeHeight = 600;
         const int pipeWidth = 50;
+        int gapHeight = 100;
+
         int tick = 0;
 
         bool jump = false;
 
 
+        bool jumpToStart = false;
         bool spaceDown = false;
-        bool lastSpace;
+
+        bool lastSpace = false;
+
+        bool check = true;
 
         Random rand = new Random();
         List<int> pipeX = new List<int>();
         List<int> pipeY = new List<int>();
 
+        List<string> scoreBoardName = new List<string>();
+        List<int> scoreBoardValue = new List<int>();
+
+
+        Image pipe = Properties.Resources.New_Project__5_;
+        Image pipeTop = Properties.Resources.New_Project_oij;
+        Image bird = Properties.Resources.birb;
+
         SolidBrush birdBrush = new SolidBrush(Color.White);
+        SolidBrush rB = new SolidBrush(Color.LightCoral);
+
         public Form1()
         {
             InitializeComponent();
@@ -47,6 +66,11 @@ namespace flappyBirdBounceTest
             {
                 case Keys.Space:
                     spaceDown = true;
+                    if (jumpToStart)
+                    {
+                        timer1.Enabled = true;
+                        jumpToStart = false;
+                    }
                     break;
             }
         }
@@ -67,8 +91,9 @@ namespace flappyBirdBounceTest
 
             if (tick % 60 == 0)
             {
+
                 pipeX.Add(800);
-                pipeY.Add(rand.Next(50, 451));
+                pipeY.Add(rand.Next(gapHeight, 451));
             }
 
             for (int loop = 0; loop < pipeX.Count(); loop++)
@@ -77,6 +102,8 @@ namespace flappyBirdBounceTest
                 {
                     pipeX.RemoveAt(loop);
                     pipeY.RemoveAt(loop);
+
+                    check = true;
                 }
             }
 
@@ -91,66 +118,265 @@ namespace flappyBirdBounceTest
                 switch (birdSpeed)
                 {
                     case -9:
-                        birdSpeed = 9;
+                        birdSpeed = 10;
                         break;
-                    case 9:
-                        birdSpeed = 7;
+                    case 10:
+                        birdSpeed = 8;
                         break;
-                    case 7:
-                        birdSpeed = 5;
+                    case 8:
+                        birdSpeed = 6;
                         break;
-                    case 5:
-                        birdSpeed = 3;
+                    case 6:
+                        birdSpeed = 4;
                         break;
-                    case 3:
-                        birdSpeed = 1;
+                    case 4:
+                        birdSpeed = 2;
                         break;
-                    case 1:
+                    case 2:
                         birdSpeed = 0;
                         break;
                     case 0:
-                        birdSpeed = -1;
+                        birdSpeed = -2;
                         break;
-                    case -1:
-                        birdSpeed = -3;
+                    case -2:
+                        birdSpeed = -4;
                         break;
-                    case -3:
-                        birdSpeed = -5;
+                    case -4:
+                        birdSpeed = -6;
                         break;
-                    case -5:
-                        birdSpeed = -7;
+                    case -6:
+                        birdSpeed = -8;
                         break;
-                    case -7:
+                    case -8:
                         birdSpeed = -9;
                         jump = false;
                         break;
                 }
 
+
             }
+            if (birdY < 0)
+            {
+                birdY = 0;
+            }
+
+
+
             birdY -= birdSpeed;
+
             for (int loop = 0; loop < pipeX.Count(); loop++)
             {
                 pipeX[loop] += pipeSpeed;
             }
-            lastSpace = spaceDown;
+
+            for (int loop = 0; loop < pipeX.Count(); loop++)
+            {
+                pipeX[loop] += pipeSpeed;
+            }
+
+            Rectangle birdRec = new Rectangle(birdX, birdY, birdWidth, birdHeight);
+            for (int loop = 0; loop < pipeX.Count(); loop++)
+            {
+                Rectangle bPipeRec = new Rectangle(pipeX[loop], pipeY[loop], pipeWidth, pipeHeight);
+                Rectangle tPipeRec = new Rectangle(pipeX[loop], pipeY[loop] - pipeHeight - gapHeight, pipeWidth, pipeHeight);
+                Rectangle bottom = new Rectangle(0, this.Height, this.Width, 1000);
+
+
+                if (birdRec.IntersectsWith(bPipeRec) || birdRec.IntersectsWith(tPipeRec) || birdRec.IntersectsWith(bottom))
+                {
+                    nameBox.Text = "";
+                    timer1.Enabled = false;
+                    nameBox.Visible = true;
+                    nameButton.Visible = true;
+                    titleLabel.Visible = true;
+                    titleLabel.Text = $"Final Score: {score}";
+                }
+
+            }
+            try
+            {
+                if (birdX > pipeX[0] + pipeWidth && check)
+                {
+                    score++;
+                    check = false;
+                }
+            }
+            catch
+            {
+
+            }
             Refresh();
+            lastSpace = spaceDown;
+
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.FillRectangle(birdBrush, birdX, birdY, birdWidth, birdHeight);
 
 
 
+            e.Graphics.DrawImage(bird, birdX, birdY, birdWidth, birdHeight);
 
             for (int loop = 0; loop < pipeX.Count(); loop++)
             {
-                e.Graphics.FillRectangle(birdBrush, pipeX[loop], pipeY[loop], pipeWidth, pipeHeight);
-                e.Graphics.FillRectangle(birdBrush, pipeX[loop], pipeY[loop] - pipeHeight - 100, pipeWidth, pipeHeight);
+                e.Graphics.DrawImage(pipeTop, pipeX[loop], pipeY[loop] - pipeHeight - gapHeight, pipeWidth, pipeHeight);
+                e.Graphics.DrawImage(pipe, pipeX[loop], pipeY[loop], pipeWidth, pipeHeight);
+
             }
 
         }
 
+        private void startButton_Click(object sender, EventArgs e)
+        {
+            closeMenu();
 
+        }
+
+        private void closeMenu()
+        {
+            titleLabel.Visible = false;
+            startButton.Visible = false;
+            closeButton.Visible = false;
+            scoreButton.Visible = false;
+            startButton.Enabled = false;
+            closeButton.Enabled = false;
+            scoreButton.Enabled = false;
+            scoreOutput.Visible = false;
+            score = 0;
+            jumpToStart = true;
+        }
+
+        private void openMenu(string text1, string text2)
+        {
+            titleLabel.Visible = true;
+            startButton.Visible = true;
+            closeButton.Visible = true;
+            scoreButton.Visible = true;
+            startButton.Enabled = true;
+            closeButton.Enabled = true;
+            scoreButton.Enabled = true;
+            nameBox.Visible = false;
+            nameButton.Visible = false;
+            timer1.Enabled = false;
+            button1.Visible = false;
+            scoreOutput.Visible = false;
+            titleLabel.Text = text1;
+            startButton.Text = text2;
+            pipeX.Clear();
+            pipeY.Clear();
+            birdX = 100;
+            birdY = 250;
+        }
+
+        private void openScore()
+        {
+
+            startButton.Visible = false;
+            closeButton.Visible = false;
+            scoreButton.Visible = false;
+            startButton.Enabled = false;
+            closeButton.Enabled = false;
+            scoreButton.Enabled = false;
+            timer1.Enabled = false;
+            scoreOutput.Visible = true;
+            titleLabel.Visible = true;
+            button1.Visible = true;
+            titleLabel.Text = "Score Board";
+            nameBox.Visible = false;
+            nameButton.Visible = false;
+            if (scoreBoardValue.Count() > 0)
+            {
+                scoreOutput.Text = "";
+                for (int loop = 0; loop < scoreBoardValue.Count() - 1; loop++)
+                {
+                    if (scoreOutput.Text == "")
+                    {
+                        scoreOutput.Text = $"{scoreBoardName[loop]}: ";
+                    }
+                    else
+                    {
+                        scoreOutput.Text += $"\n{scoreBoardName[loop]}: ";
+                    }
+                    scoreOutput.Text += $"{scoreBoardValue[loop]}";
+
+                }
+            }
+            else
+            {
+                scoreOutput.Text = "No Scores Yet.";
+            }
+
+
+
+
+        }
+
+        private void closeButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void scoreOutput_Click(object sender, EventArgs e)
+        {
+
+            openScore();
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void nameButton_Click(object sender, EventArgs e)
+        {
+            string name = nameBox.Text;
+            errorLabel.Visible = false;
+
+            if (name != "")
+            {
+                if (scoreBoardValue.Count() == 0)
+                {
+                    scoreBoardName.Add(name);
+                    scoreBoardValue.Add(score);
+                    scoreBoardName.Add("NULL");
+                    scoreBoardValue.Add(-1);
+                    openMenu($"Final Score: {score}", "Restart Game");
+                }
+
+                else
+                {
+                    for (int loop = 0; loop < scoreBoardValue.Count(); loop++)
+                    {
+                        if (score > scoreBoardValue[loop])
+                        {
+                            scoreBoardValue.Insert(loop, score);
+
+                            scoreBoardName.Insert(loop, name);
+
+                            openMenu($"Final Score: {score}", "Restart Game");
+                            break;
+                        }
+                    }
+                }
+            }
+
+            else
+            {
+                errorLabel.Visible = true;
+            }
+
+            openMenu($"Final Score: {score}", "Restart Game");
+        }
+
+        private void scoreButton_Click(object sender, EventArgs e)
+        {
+            openScore();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            openMenu("Flappy Bird", "Start");
+        }
     }
 }
