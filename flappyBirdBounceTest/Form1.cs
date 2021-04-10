@@ -67,7 +67,7 @@ namespace flappyBirdBounceTest
 
 
 
-      
+
 
         public Form1()
         {
@@ -120,7 +120,7 @@ namespace flappyBirdBounceTest
                 pipeX.Add(800);
                 pipeY.Add(rand.Next(gapHeight, 451));
             }
-               // removes pipes when they go off screen.
+            // removes pipes when they go off screen.
             for (int loop = 0; loop < pipeX.Count(); loop++)
             {
                 if (pipeX[loop] < 0 - pipeWidth)
@@ -198,8 +198,8 @@ namespace flappyBirdBounceTest
                 pipeX[loop] += pipeSpeed;
             }
 
-            
-// hit box set up
+
+            // hit box set up
             Rectangle birdRec = new Rectangle(birdX, birdY, birdWidth, birdHeight);
             for (int loop = 0; loop < pipeX.Count(); loop++)
             {
