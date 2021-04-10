@@ -40,6 +40,7 @@ namespace flappyBirdBounceTest
             this.nameButton = new System.Windows.Forms.Button();
             this.errorLabel = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.spaceLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // timer1
@@ -159,6 +160,20 @@ namespace flappyBirdBounceTest
             this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // spaceLabel
+            // 
+            this.spaceLabel.AutoSize = true;
+            this.spaceLabel.BackColor = System.Drawing.Color.Transparent;
+            this.spaceLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.spaceLabel.ForeColor = System.Drawing.Color.White;
+            this.spaceLabel.Location = new System.Drawing.Point(28, 97);
+            this.spaceLabel.Name = "spaceLabel";
+            this.spaceLabel.Size = new System.Drawing.Size(705, 78);
+            this.spaceLabel.TabIndex = 9;
+            this.spaceLabel.Text = "Press Space To Begin";
+            this.spaceLabel.Visible = false;
+            this.spaceLabel.Click += new System.EventHandler(this.label1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -166,6 +181,7 @@ namespace flappyBirdBounceTest
             this.BackColor = System.Drawing.Color.Black;
             this.BackgroundImage = global::flappyBirdBounceTest.Properties.Resources.background_scene___flappy_bird_backround;
             this.ClientSize = new System.Drawing.Size(784, 461);
+            this.Controls.Add(this.spaceLabel);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.errorLabel);
             this.Controls.Add(this.nameButton);
@@ -199,6 +215,7 @@ namespace flappyBirdBounceTest
         private System.Windows.Forms.Button nameButton;
         private System.Windows.Forms.Label errorLabel;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label spaceLabel;
     }
 }
 

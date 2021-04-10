@@ -1,4 +1,9 @@
-﻿using System;
+﻿//Parker Railton
+//Mr.T
+//This is a clone of Flappy Bird
+
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +20,7 @@ namespace flappyBirdBounceTest
 
     public partial class Form1 : Form
     {
+        //starting values
         int birdX = 100;
         int birdY = 250;
         int birdSpeed = -9;
@@ -26,7 +32,7 @@ namespace flappyBirdBounceTest
 
         const int pipeHeight = 600;
         const int pipeWidth = 50;
-        int gapHeight = 100;
+        const int gapHeight = 100;
 
         int tick = 0;
 
@@ -41,20 +47,19 @@ namespace flappyBirdBounceTest
         bool check = true;
 
         Random rand = new Random();
+        //pipe locations
         List<int> pipeX = new List<int>();
         List<int> pipeY = new List<int>();
-
+        //score board lists
         List<string> scoreBoardName = new List<string>();
         List<int> scoreBoardValue = new List<int>();
 
-
+        // textures
         Image pipe = Properties.Resources.New_Project__5_;
         Image pipeTop = Properties.Resources.New_Project_oij;
         Image bird = Properties.Resources.birb;
 
-        SolidBrush birdBrush = new SolidBrush(Color.White);
-        SolidBrush rB = new SolidBrush(Color.LightCoral);
-
+        //sounds
         System.Windows.Media.MediaPlayer hit = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer fall = new System.Windows.Media.MediaPlayer();
         System.Windows.Media.MediaPlayer point = new System.Windows.Media.MediaPlayer();
@@ -69,7 +74,7 @@ namespace flappyBirdBounceTest
             InitializeComponent();
 
 
-
+            //sound set up
             hit.Open(new Uri(Application.StartupPath + "/Resources/sfx_hit.wav"));
             fall.Open(new Uri(Application.StartupPath + "/Resources/sfx_die.wav"));
             point.Open(new Uri(Application.StartupPath + "/Resources/sfx_point.wav"));
@@ -78,6 +83,7 @@ namespace flappyBirdBounceTest
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
+            //checks if space is pushed, and if you have to press space to start the game
             switch (e.KeyCode)
             {
                 case Keys.Space:
@@ -86,6 +92,7 @@ namespace flappyBirdBounceTest
                     {
                         timer1.Enabled = true;
                         jumpToStart = false;
+                        spaceLabel.Visible = false;
                     }
                     break;
             }
@@ -95,6 +102,7 @@ namespace flappyBirdBounceTest
         {
             switch (e.KeyCode)
             {
+                //checks if space has been released
                 case Keys.Space:
                     spaceDown = false;
                     break;
@@ -103,6 +111,7 @@ namespace flappyBirdBounceTest
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            //creates a new pipe every 60 ticks
             tick++;
 
             if (tick % 60 == 0)
@@ -111,7 +120,7 @@ namespace flappyBirdBounceTest
                 pipeX.Add(800);
                 pipeY.Add(rand.Next(gapHeight, 451));
             }
-
+               // removes pipes when they go off screen.
             for (int loop = 0; loop < pipeX.Count(); loop++)
             {
                 if (pipeX[loop] < 0 - pipeWidth)
@@ -122,7 +131,7 @@ namespace flappyBirdBounceTest
                     check = true;
                 }
             }
-
+            //edge detection for space
             if (spaceDown && !lastSpace)
             {
                 flap.Stop();
@@ -130,7 +139,7 @@ namespace flappyBirdBounceTest
                 jump = true;
                 birdSpeed = -9;
             }
-
+            //jump hieghts
             if (jump)
             {
                 switch (birdSpeed)
@@ -173,25 +182,24 @@ namespace flappyBirdBounceTest
 
 
             }
+
+            // stops bird from going above the screen
             if (birdY < 0)
             {
                 birdY = 0;
             }
 
 
-
+            // moves bird
             birdY -= birdSpeed;
-
+            //moves pipes
             for (int loop = 0; loop < pipeX.Count(); loop++)
             {
                 pipeX[loop] += pipeSpeed;
             }
 
-            for (int loop = 0; loop < pipeX.Count(); loop++)
-            {
-                pipeX[loop] += pipeSpeed;
-            }
-
+            
+// hit box set up
             Rectangle birdRec = new Rectangle(birdX, birdY, birdWidth, birdHeight);
             for (int loop = 0; loop < pipeX.Count(); loop++)
             {
@@ -199,7 +207,7 @@ namespace flappyBirdBounceTest
                 Rectangle tPipeRec = new Rectangle(pipeX[loop], pipeY[loop] - pipeHeight - gapHeight, pipeWidth, pipeHeight);
                 Rectangle bottom = new Rectangle(0, this.Height, this.Width, 1000);
 
-
+                //collision detection
                 if (birdRec.IntersectsWith(bPipeRec) || birdRec.IntersectsWith(tPipeRec) || birdRec.IntersectsWith(bottom))
                 {
                     if (birdRec.IntersectsWith(bottom))
@@ -223,6 +231,7 @@ namespace flappyBirdBounceTest
             }
             try
             {
+                //gives a point for passing through pipes
                 if (birdX > pipeX[0] + pipeWidth && check)
                 {
                     point.Stop();
@@ -243,7 +252,7 @@ namespace flappyBirdBounceTest
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
 
-
+            //draws pipes and bird
 
             e.Graphics.DrawImage(bird, birdX, birdY, birdWidth, birdHeight);
 
@@ -259,9 +268,10 @@ namespace flappyBirdBounceTest
         private void startButton_Click(object sender, EventArgs e)
         {
             closeMenu();
+            spaceLabel.Visible = true;
 
         }
-
+        //menu functions
         private void closeMenu()
         {
             titleLabel.Visible = false;
@@ -314,6 +324,7 @@ namespace flappyBirdBounceTest
             titleLabel.Text = "Score Board";
             nameBox.Visible = false;
             nameButton.Visible = false;
+            //draws scores onto score board in correct order
             if (scoreBoardValue.Count() > 0)
             {
                 scoreOutput.Text = "";
@@ -360,6 +371,7 @@ namespace flappyBirdBounceTest
 
         private void nameButton_Click(object sender, EventArgs e)
         {
+            //places scores in correct position
             string name = nameBox.Text;
             errorLabel.Visible = false;
 
@@ -407,6 +419,11 @@ namespace flappyBirdBounceTest
         private void button1_Click(object sender, EventArgs e)
         {
             openMenu("Flappy Bird", "Start");
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
